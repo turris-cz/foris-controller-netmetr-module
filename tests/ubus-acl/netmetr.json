@@ -1,0 +1,10 @@
+{
+    "user": "stepan",
+    "access": {
+        "foris-controller-netmetr": {
+            "methods": [ "get" ]
+        }
+    },
+    "publish": [ "foris-controller-netmetr" ],
+    "subscribe": [ "foris-controller-netmetr" ]
+}
