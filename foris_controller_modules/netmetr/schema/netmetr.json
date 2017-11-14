@@ -1,45 +1,94 @@
 {
     "oneOf": [
         {
-            "description": "Get information from the netmetr module",
+            "description": "Get netmetr settings request",
             "properties": {
                 "module": {"enum": ["netmetr"]},
                 "kind": {"enum": ["request"]},
-                "action": {"enum": ["get"]}
+                "action": {"enum": ["get_settings"]}
             },
             "additionalProperties": false
         },
         {
-            "description": "Reply to call get action in netmetr module",
+            "description": "Get netmetr settings reply",
             "properties": {
                 "module": {"enum": ["netmetr"]},
                 "kind": {"enum": ["reply"]},
-                "action": {"enum": ["get"]},
+                "action": {"enum": ["get_settings"]},
                 "data": {
                     "type": "object",
                     "properties": {
-                        "data": {"type": "object"}
+                        "sync_code": {"type": "string"},
+                        "autostart_enabled": {"type": "boolean"},
+                        "hours_to_run": {
+                            "type": "array",
+                            "items": {"type": "integer", "minimum": 0, "maximum": 23}
+                        }
                     },
                     "additionalProperties": false,
-                    "required": ["data"]
+                    "required": ["sync_code", "autostart_enabled", "hours_to_run"]
                 }
             },
             "additionalProperties": false,
             "required": ["data"]
         },
         {
-            "description": "Notification in get action in netmetr module",
+            "description": "Update netmetr settings request",
             "properties": {
                 "module": {"enum": ["netmetr"]},
-                "kind": {"enum": ["notification"]},
-                "action": {"enum": ["get"]},
+                "kind": {"enum": ["request"]},
+                "action": {"enum": ["update_settings"]},
                 "data": {
                     "type": "object",
                     "properties": {
-                        "msg": {"type": "string"}
+                        "autostart_enabled": {"type": "boolean"},
+                        "hours_to_run": {
+                            "type": "array",
+                            "items": {"type": "integer", "minimum": 0, "maximum": 23}
+                        }
                     },
                     "additionalProperties": false,
-                    "required": ["msg"]
+                    "required": ["autostart_enabled", "hours_to_run"]
+                }
+            },
+            "additionalProperties": false,
+            "required": ["data"]
+        },
+        {
+            "description": "Update netmetr settings reply",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["reply"]},
+                "action": {"enum": ["update_settings"]},
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "result": {"type": "boolean"}
+                    },
+                    "additionalProperties": false,
+                    "required": ["result"]
+                }
+            },
+            "additionalProperties": false,
+            "required": ["data"]
+        },
+        {
+            "description": "Notification that the netmetr settings were updated",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["notification"]},
+                "action": {"enum": ["update_settings"]},
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "autostart_enabled": {"type": "boolean"},
+                        "hours_to_run": {
+                            "type": "array",
+                            "items": {"type": "integer", "minimum": 0, "maximum": 23}
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": ["autostart_enabled", "hours_to_run"]
                 }
             },
             "additionalProperties": false,

@@ -28,12 +28,20 @@ logger = logging.getLogger(__name__)
 
 
 class MockNetmetrHandler(Handler, BaseMockHandler):
+    autostart_enabled = True
+    hours_to_run = range(0, 24, 2)
+    sync_code = "1af827965d0d"
 
     @logger_wrapper(logger)
-    def get_sample(self):
+    def get_settings(self):
         return {
-            "data": {
-                "sample": "some/path",
-                "atsha": "0011002233",
-            }
+            "sync_code": self.sync_code,
+            "autostart_enabled": self.autostart_enabled,
+            "hours_to_run": self.hours_to_run,
         }
+
+    @logger_wrapper(logger)
+    def update_settings(self, autostart_enabled, hours_to_run):
+        self.hours_to_run = hours_to_run
+        self.autostart_enabled = autostart_enabled
+        return True

@@ -20,21 +20,50 @@
 from .fixtures import backend, infrastructure, ubusd_test
 
 
-def test_about(infrastructure, ubusd_test):
+def test_settings(infrastructure, ubusd_test):
     notifications = infrastructure.get_notifications()
+
     res = infrastructure.process_message({
         "module": "netmetr",
-        "action": "get",
+        "action": "get_settings",
         "kind": "request",
     })
+    assert set(res["data"].keys()) == {"autostart_enabled", "hours_to_run", "sync_code"}
+    sync_code = res["data"]["sync_code"]
+    new_autostart_enabled = not res["data"]["autostart_enabled"]
+    new_hours_to_run = [e for e in range(24) if e not in res["data"]["hours_to_run"]]
+
+    res = infrastructure.process_message({
+        "module": "netmetr",
+        "action": "update_settings",
+        "kind": "request",
+        "data": {
+            "autostart_enabled": new_autostart_enabled,
+            "hours_to_run": new_hours_to_run,
+        }
+    })
+    assert res["data"] == {"result": True}
+
     notifications = infrastructure.get_notifications(notifications)
     assert notifications[-1] == {
         u"module": u"netmetr",
-        u"action": u"get",
+        u"action": u"update_settings",
         u"kind": u"notification",
-        u"data": {u"msg": u"get triggered"},
+        u"data": {u"autostart_enabled": new_autostart_enabled, u"hours_to_run": new_hours_to_run},
     }
-    assert set(res.keys()) == {"action", "kind", "data", "module"}
-    assert set(res["data"].keys()) == {
-        u"data",
+
+    res = infrastructure.process_message({
+        "module": "netmetr",
+        "action": "get_settings",
+        "kind": "request",
+    })
+    assert res == {
+        u"module": u"netmetr",
+        u"action": u"get_settings",
+        u"kind": u"reply",
+        u"data": {
+            u"sync_code": sync_code,
+            u"autostart_enabled": new_autostart_enabled,
+            u"hours_to_run": new_hours_to_run
+        },
     }

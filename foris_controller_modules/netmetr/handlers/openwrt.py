@@ -22,8 +22,7 @@ import logging
 from foris_controller.handler_base import BaseOpenwrtHandler
 from foris_controller.utils import logger_wrapper
 
-from foris_controller_backends.about import AtshaCmds
-from foris_controller_backends.netmetr import NetmetrCmds
+from foris_controller_backends.netmetr import NetmetrUci
 
 from .. import Handler
 
@@ -31,14 +30,12 @@ logger = logging.getLogger(__name__)
 
 
 class OpenwrtNetmetrHandler(Handler, BaseOpenwrtHandler):
-
-    atsha_cmds = AtshaCmds()
-    netmetr_cmds = NetmetrCmds()
+    uci = NetmetrUci()
 
     @logger_wrapper(logger)
-    def get_sample(self):
-        return {
-            "data": {
-                "sample": self.netmetr_cmds.get_sample(), "atsha": self.atsha_cmds.get_serial()
-            }
-        }
+    def get_settings(self):
+        return self.uci.get_settings()
+
+    @logger_wrapper(logger)
+    def update_settings(self, autostart_enabled, hours_to_run):
+        return self.uci.update_settings(autostart_enabled, hours_to_run)

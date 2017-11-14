@@ -19,11 +19,46 @@
 
 import logging
 
-from foris_controller_backends.cmdline import BaseCmdLine
+from foris_controller_backends.uci import (
+    UciBackend, UciTypeException, UciRecordNotFound, get_option_named,
+    parse_bool, store_bool
+)
+
 
 logger = logging.getLogger(__name__)
 
 
-class NetmetrCmds(BaseCmdLine):
-    def get_sample(self):
-        return self._run_command("pwd")[1]
+class NetmetrUci():
+    def get_settings(self):
+        with UciBackend() as backend:
+            data = backend.read("netmetr")
+            autostart_enabled = parse_bool(
+                get_option_named(data, "netmetr", "settings", "autostart_enabled")
+            )
+            sync_code = get_option_named(data, "netmetr", "settings", "sync_code")
+            try:
+                hours_to_run = map(
+                    int,
+                    get_option_named(data, "netmetr", "settings", "hours_to_run")
+                )
+            except ValueError:
+                raise UciTypeException(
+                    get_option_named(data, "netmetr", "settings", "hours_to_run"),
+                    "[int, int, ...]",
+                )
+            except UciRecordNotFound:
+                hours_to_run = []
+        return {
+            "autostart_enabled": autostart_enabled,
+            "hours_to_run": hours_to_run,
+            "sync_code": sync_code,
+        }
+
+    def update_settings(self, autostart_enabled, hours_to_run):
+
+        with UciBackend() as backend:
+            backend.set_option(
+                "netmetr", "settings", "autostart_enabled", store_bool(autostart_enabled))
+            backend.replace_list("netmetr", "settings", "hours_to_run", hours_to_run)
+
+        return True

@@ -26,15 +26,21 @@ from foris_controller.handler_base import wrap_required_functions
 class NetmetrModule(BaseModule):
     logger = logging.getLogger(__name__)
 
-    def action_get(self, data):
+    def action_get_settings(self, data):
         res = {}
-        res.update(self.handler.get_sample())
-        self.notify("get", {"msg": "get triggered"})
+        res.update(self.handler.get_settings())
         return res
+
+    def action_update_settings(self, data):
+        res = self.handler.update_settings(**data)
+        if res:
+            self.notify("update_settings", data)
+        return {"result": res}
 
 
 @wrap_required_functions([
-    'get_sample',
+    'get_settings',
+    'update_settings',
 ])
 class Handler(object):
     pass
