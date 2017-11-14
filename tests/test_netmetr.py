@@ -67,3 +67,12 @@ def test_settings(infrastructure, ubusd_test):
             u"hours_to_run": new_hours_to_run
         },
     }
+
+
+def test_data(infrastructure, ubusd_test):
+    res = infrastructure.process_message({
+        "module": "netmetr",
+        "action": "get_data",
+        "kind": "request",
+    })
+    assert set(res["data"].keys()) == {"status", "performed_tests"}

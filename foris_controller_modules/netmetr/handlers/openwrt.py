@@ -22,7 +22,7 @@ import logging
 from foris_controller.handler_base import BaseOpenwrtHandler
 from foris_controller.utils import logger_wrapper
 
-from foris_controller_backends.netmetr import NetmetrUci
+from foris_controller_backends.netmetr import NetmetrUci, NetmetrDataFile
 
 from .. import Handler
 
@@ -31,6 +31,7 @@ logger = logging.getLogger(__name__)
 
 class OpenwrtNetmetrHandler(Handler, BaseOpenwrtHandler):
     uci = NetmetrUci()
+    data = NetmetrDataFile()
 
     @logger_wrapper(logger)
     def get_settings(self):
@@ -39,3 +40,8 @@ class OpenwrtNetmetrHandler(Handler, BaseOpenwrtHandler):
     @logger_wrapper(logger)
     def update_settings(self, autostart_enabled, hours_to_run):
         return self.uci.update_settings(autostart_enabled, hours_to_run)
+
+    @logger_wrapper(logger)
+    def get_data(self):
+        status, data = self.data.read_records()
+        return {"status": status, "performed_tests": data}

@@ -37,10 +37,16 @@ class NetmetrModule(BaseModule):
             self.notify("update_settings", data)
         return {"result": res}
 
+    def action_get_data(self, data):
+        res = {}
+        res.update(self.handler.get_data())
+        return res
+
 
 @wrap_required_functions([
     'get_settings',
     'update_settings',
+    'get_data',
 ])
 class Handler(object):
     pass

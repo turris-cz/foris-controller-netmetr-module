@@ -17,12 +17,15 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #
 
+import json
 import logging
 
+from foris_controller.app import app_info
 from foris_controller_backends.uci import (
     UciBackend, UciTypeException, UciRecordNotFound, get_option_named,
     parse_bool, store_bool
 )
+from foris_controller.utils import RWLock
 
 
 logger = logging.getLogger(__name__)
@@ -62,3 +65,32 @@ class NetmetrUci():
             backend.replace_list("netmetr", "settings", "hours_to_run", hours_to_run)
 
         return True
+
+
+class NetmetrDataFile(object):
+    DATA_FILE_PATH = "/tmp/netmetr-history.json"
+    data_file_lock = RWLock(app_info["lock_backend"])
+
+    def read_records(self):
+        with self.data_file_lock.readlock:
+            try:
+                with open(NetmetrDataFile.DATA_FILE_PATH) as f:
+                    data = json.load(f)
+            except IOError:
+                return "missing", []
+            except ValueError:
+                return "error", []  # invalid json
+
+        if len(data["error"]) > 0:
+            return "error", []  # error indicator was set
+
+        res = []
+        for record in data["history"]:
+            res.append({
+                "speed_download": float(record["speed_download"]),
+                "speed_upload": float(record["speed_upload"]),
+                "ping": float(record["ping"]),
+                "time": int(record["time"]),
+                "test_uuid": record["test_uuid"],
+            })
+        return "ready", res

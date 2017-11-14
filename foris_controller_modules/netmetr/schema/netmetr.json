@@ -93,6 +93,50 @@
             },
             "additionalProperties": false,
             "required": ["data"]
+        },
+        {
+            "description": "Get netmetr data request",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["request"]},
+                "action": {"enum": ["get_data"]}
+            },
+            "additionalProperties": false
+        },
+        {
+            "description": "Get netmetr data reply",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["reply"]},
+                "action": {"enum": ["get_data"]},
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "status": {"enum": ["ready", "missing", "error"]},
+                        "performed_tests": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "speed_download": {"type": "number"},
+                                    "speed_upload": {"type": "number"},
+                                    "ping": {"type": "number"},
+                                    "time": {"type": "integer"},
+                                    "test_uuid": {"type": "string"}
+                                },
+                                "additionalProperties": false,
+                                "required": [
+                                    "speed_download", "speed_upload", "ping", "test_uuid", "time"
+                                ]
+                            }
+                        }
+                    },
+                    "additionalProperties": false,
+                    "required": ["status", "performed_tests"]
+                }
+            },
+            "additionalProperties": false,
+            "required": ["data"]
         }
     ]
 }

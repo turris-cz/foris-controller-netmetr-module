@@ -18,6 +18,7 @@
 #
 
 import logging
+import random
 
 from foris_controller.handler_base import BaseMockHandler
 from foris_controller.utils import logger_wrapper
@@ -45,3 +46,26 @@ class MockNetmetrHandler(Handler, BaseMockHandler):
         self.hours_to_run = hours_to_run
         self.autostart_enabled = autostart_enabled
         return True
+
+    @logger_wrapper(logger)
+    def get_data(self):
+        return random.choice([
+            {"status": "error", "performed_tests": []},
+            {"status": "missing", "performed_tests": []},
+            {"status": "ready", "performed_tests": [
+                {
+                    "speed_download": 23,
+                    "speed_upload": 53,
+                    "ping": 0.57,
+                    "time": 1510669694000,
+                    "test_uuid": "563803cc-b43e-4b2e-bf9e-439b098fe35b"
+                },
+                {
+                    "speed_download": 88,
+                    "speed_upload": 66,
+                    "ping": 0.81,
+                    "time": 1510669699000,
+                    "test_uuid": "a975e00d-0bca-4871-8ce3-6e33c12311ef"
+                }
+            ]},
+        ])
