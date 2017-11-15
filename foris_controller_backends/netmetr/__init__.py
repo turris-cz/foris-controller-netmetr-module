@@ -21,11 +21,12 @@ import json
 import logging
 
 from foris_controller.app import app_info
+from foris_controller.utils import RWLock
+from foris_controller_backends.cmdline import AsyncCommand
 from foris_controller_backends.uci import (
     UciBackend, UciTypeException, UciRecordNotFound, get_option_named,
     parse_bool, store_bool
 )
-from foris_controller.utils import RWLock
 
 
 logger = logging.getLogger(__name__)
@@ -94,3 +95,69 @@ class NetmetrDataFile(object):
                 "test_uuid": record["test_uuid"],
             })
         return "ready", res
+
+
+class NetmetrCmds(AsyncCommand):
+    def download_data(self, exit_notify, reset_notify):
+        logger.debug("Starting to download netmetr data.")
+
+        def handler_exit(process_data):
+            exit_notify({"async_id": process_data.id, "passed": process_data.get_retval() == 0})
+            logger.debug(
+                "Downloading netmetr data finished: (retval=%d)" % process_data.get_retval())
+
+        process_id = self.start_process(
+            ["/usr/bin/netmetr", "--dwlhist", "--no-color", "--no-run"],
+            [],  # no notifications only the exit one
+            handler_exit,
+            reset_notify,
+        )
+        logger.debug("Dowloading netmetr data started '%s'." % process_id)
+        return process_id
+
+    def measure_and_download_data(self, notify, exit_notify, reset_notify):
+        logger.debug("Starting to measure and download netmetr data.")
+
+        def handler_text_gen(regex, percent, msg):
+            def handler(matched, process_data):
+                notify({"async_id": process_data.id, "percent": percent, "msg": msg})
+
+            return regex, handler
+
+        def handler_ping(matched, process_data):
+            attempt, value = matched.groups()
+            notify({
+                "async_id": process_data.id, "percent": 10 + int(attempt) * 5,
+                "msg": "ping %sms" % value
+            })
+
+        def handler_sync_code(matched, process_data):
+            sync_code = matched.groups()
+            notify(
+                {"async_id": process_data.id, "percent": 100, "msg": "sync_code %s" % sync_code})
+
+        def handler_exit(process_data):
+            exit_notify({"async_id": process_data.id, "passed": process_data.get_retval() == 0})
+            logger.debug(
+                "Measuring and downloading netmetr data finished: (retval=%d)"
+                % process_data.get_retval()
+            )
+
+        process_id = self.start_process(
+            ["/usr/bin/netmetr", "--dwlhist", "--no-color"],
+            [
+                handler_text_gen(r"^Starting ping test...$", 5, "ping start"),
+                (r"^ping_([0-9]+)_msec = ([0-9]+.?[0-9]?)", handler_ping),
+                handler_text_gen(r"^Starting speed test...$", 65, "speed start"),
+                handler_text_gen(r"^pretest downlink start...", 70, "speed downlink start"),
+                handler_text_gen(r"^downlink test end.$", 80, "speed downlink end"),
+                handler_text_gen(r"^pretest uplink start...", 85, "speed uplink start"),
+                handler_text_gen(r"^uplink test end.$", 90, "speed uplink end"),
+                (r"^Your Sync code is:\s*([0-9a-zA-Z]+)", handler_sync_code),
+            ],
+            handler_exit,
+            reset_notify,
+        )
+
+        logger.debug("Measuring and dowloading netmetr data started '%s'." % process_id)
+        return process_id

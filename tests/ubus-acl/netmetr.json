@@ -2,7 +2,7 @@
     "user": "stepan",
     "access": {
         "foris-controller-netmetr": {
-            "methods": [ "get_settings", "update_settings", "get_data" ]
+            "methods": [ "get_settings", "update_settings", "get_data", "download_data", "measure_and_download_data" ]
         }
     },
     "publish": [ "foris-controller-netmetr" ],

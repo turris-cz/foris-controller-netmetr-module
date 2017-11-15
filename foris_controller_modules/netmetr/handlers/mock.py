@@ -69,3 +69,11 @@ class MockNetmetrHandler(Handler, BaseMockHandler):
                 }
             ]},
         ])
+
+    @logger_wrapper(logger)
+    def download_data_trigger(self, exit_notify, reset_notify):
+        return "%032X" % random.randrange(2**32)
+
+    @logger_wrapper(logger)
+    def measure_and_download_data_trigger(self, notify, exit_notify, reset_notify):
+        return "%032X" % random.randrange(2**32)

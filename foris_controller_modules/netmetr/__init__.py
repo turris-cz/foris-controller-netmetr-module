@@ -42,11 +42,32 @@ class NetmetrModule(BaseModule):
         res.update(self.handler.get_data())
         return res
 
+    def action_download_data(self, data):
+        def exit_notify(msg):
+            self.notify("download_data_finished", msg)
+        return {
+            "async_id": self.handler.download_data_trigger(exit_notify, self.reset_notify)
+        }
+
+    def action_measure_and_download_data(self, data):
+        def notify(msg):
+            self.notify("measure_and_download_data_notification", msg)
+
+        def exit_notify(msg):
+            self.notify("measure_and_download_data_finished", msg)
+
+        return {
+            "async_id": self.handler.measure_and_download_data_trigger(
+                notify, exit_notify, self.reset_notify)
+        }
+
 
 @wrap_required_functions([
     'get_settings',
     'update_settings',
     'get_data',
+    'download_data_trigger',
+    'measure_and_download_data_trigger',
 ])
 class Handler(object):
     pass

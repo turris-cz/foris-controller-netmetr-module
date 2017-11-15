@@ -69,10 +69,28 @@ def test_settings(infrastructure, ubusd_test):
     }
 
 
-def test_data(infrastructure, ubusd_test):
+def test_get_data(infrastructure, ubusd_test):
     res = infrastructure.process_message({
         "module": "netmetr",
         "action": "get_data",
         "kind": "request",
     })
     assert set(res["data"].keys()) == {"status", "performed_tests"}
+
+
+def test_download_data(infrastructure, ubusd_test):
+    res = infrastructure.process_message({
+        "module": "netmetr",
+        "action": "download_data",
+        "kind": "request",
+    })
+    assert set(res["data"].keys()) == {"async_id"}
+
+
+def test_measure_and_download_data(infrastructure, ubusd_test):
+    res = infrastructure.process_message({
+        "module": "netmetr",
+        "action": "measure_and_download_data",
+        "kind": "request",
+    })
+    assert set(res["data"].keys()) == {"async_id"}

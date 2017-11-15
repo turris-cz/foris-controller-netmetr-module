@@ -137,6 +137,118 @@
             },
             "additionalProperties": false,
             "required": ["data"]
+        },
+        {
+            "description": "Trigger download data request",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["request"]},
+                "action": {"enum": ["download_data"]}
+            },
+            "additionalProperties": false
+        },
+        {
+            "description": "Trigger download data reply",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["reply"]},
+                "action": {"enum": ["download_data"]},
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "async_id": {"type": "string"}
+                    },
+                    "additionalProperties": false,
+                    "required": ["async_id"]
+                }
+            },
+            "additionalProperties": false,
+            "required": ["data"]
+        },
+        {
+            "description": "Download data finished notification",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["notification"]},
+                "action": {"enum": ["download_data_finished"]},
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "async_id": {"type": "string"},
+                        "passed": {"type": "boolean"}
+                    },
+                    "additionalProperties": false,
+                    "required": ["async_id", "passed"]
+                }
+            },
+            "additionalProperties": false,
+            "required": ["data"]
+        },
+        {
+            "description": "Trigger measure speed and download data request",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["request"]},
+                "action": {"enum": ["measure_and_download_data"]}
+            },
+            "additionalProperties": false
+        },
+        {
+            "description": "Trigger measure speed and download data request",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["reply"]},
+                "action": {"enum": ["measure_and_download_data"]},
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "async_id": {"type": "string"}
+                    },
+                    "additionalProperties": false,
+                    "required": ["async_id"]
+                }
+            },
+            "additionalProperties": false,
+            "required": ["data"]
+        },
+        {
+            "description": "Measure speed and download data notification",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["notification"]},
+                "action": {"enum": ["measure_and_download_data_notification"]},
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "async_id": {"type": "string"},
+                        "percent": {"type": "integer", "minimum": 0, "maximum": 100},
+                        "msg": {"type": "string"}
+                    },
+                    "additionalProperties": false,
+                    "required": ["async_id", "percent", "msg"]
+                }
+            },
+            "additionalProperties": false,
+            "required": ["data"]
+        },
+        {
+            "description": "Measure speed and download data finished",
+            "properties": {
+                "module": {"enum": ["netmetr"]},
+                "kind": {"enum": ["notification"]},
+                "action": {"enum": ["measure_and_download_data_finished"]},
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "async_id": {"type": "string"},
+                        "passed": {"type": "boolean"}
+                    },
+                    "additionalProperties": false,
+                    "required": ["async_id", "passed"]
+                }
+            },
+            "additionalProperties": false,
+            "required": ["data"]
         }
     ]
 }
