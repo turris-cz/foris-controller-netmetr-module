@@ -39,7 +39,7 @@ class OpenwrtNetmetrHandler(Handler, BaseOpenwrtHandler):
         return self.uci.get_settings()
 
     @logger_wrapper(logger)
-    def update_settings(self, autostart_enabled, hours_to_run):
+    def update_settings(self, autostart_enabled, hours_to_run=None):
         return self.uci.update_settings(autostart_enabled, hours_to_run)
 
     @logger_wrapper(logger)

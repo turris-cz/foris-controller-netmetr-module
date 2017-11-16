@@ -68,6 +68,42 @@ def test_settings(infrastructure, ubusd_test):
         },
     }
 
+    # command without hours_to_run
+    new_autostart_enabled = not new_autostart_enabled
+    res = infrastructure.process_message({
+        "module": "netmetr",
+        "action": "update_settings",
+        "kind": "request",
+        "data": {
+            "autostart_enabled": new_autostart_enabled,
+        }
+    })
+    assert res["data"] == {"result": True}
+
+    notifications = infrastructure.get_notifications(notifications)
+    assert notifications[-1] == {
+        u"module": u"netmetr",
+        u"action": u"update_settings",
+        u"kind": u"notification",
+        u"data": {u"autostart_enabled": new_autostart_enabled},
+    }
+
+    res = infrastructure.process_message({
+        "module": "netmetr",
+        "action": "get_settings",
+        "kind": "request",
+    })
+    assert res == {
+        u"module": u"netmetr",
+        u"action": u"get_settings",
+        u"kind": u"reply",
+        u"data": {
+            u"sync_code": sync_code,
+            u"autostart_enabled": new_autostart_enabled,
+            u"hours_to_run": new_hours_to_run
+        },
+    }
+
 
 def test_get_data(infrastructure, ubusd_test):
     res = infrastructure.process_message({

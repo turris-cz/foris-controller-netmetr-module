@@ -42,9 +42,10 @@ class MockNetmetrHandler(Handler, BaseMockHandler):
         }
 
     @logger_wrapper(logger)
-    def update_settings(self, autostart_enabled, hours_to_run):
-        self.hours_to_run = hours_to_run
+    def update_settings(self, autostart_enabled, hours_to_run=None):
         self.autostart_enabled = autostart_enabled
+        if hours_to_run:
+            self.hours_to_run = hours_to_run
         return True
 
     @logger_wrapper(logger)

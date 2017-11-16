@@ -48,7 +48,7 @@
                         }
                     },
                     "additionalProperties": false,
-                    "required": ["autostart_enabled", "hours_to_run"]
+                    "required": ["autostart_enabled"]
                 }
             },
             "additionalProperties": false,
@@ -88,7 +88,7 @@
                         }
                     },
                     "additionalProperties": false,
-                    "required": ["autostart_enabled", "hours_to_run"]
+                    "required": ["autostart_enabled"]
                 }
             },
             "additionalProperties": false,

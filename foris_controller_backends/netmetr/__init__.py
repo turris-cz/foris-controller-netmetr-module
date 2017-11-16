@@ -58,12 +58,13 @@ class NetmetrUci():
             "sync_code": sync_code,
         }
 
-    def update_settings(self, autostart_enabled, hours_to_run):
+    def update_settings(self, autostart_enabled, hours_to_run=None):
 
         with UciBackend() as backend:
             backend.set_option(
                 "netmetr", "settings", "autostart_enabled", store_bool(autostart_enabled))
-            backend.replace_list("netmetr", "settings", "hours_to_run", hours_to_run)
+            if hours_to_run is not None:
+                backend.replace_list("netmetr", "settings", "hours_to_run", hours_to_run)
 
         return True
 
