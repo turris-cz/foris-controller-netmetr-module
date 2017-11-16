@@ -58,14 +58,14 @@ class MockNetmetrHandler(Handler, BaseMockHandler):
                     "speed_download": 23,
                     "speed_upload": 53,
                     "ping": 0.57,
-                    "time": 1510669694000,
+                    "time": 1510669694,
                     "test_uuid": "563803cc-b43e-4b2e-bf9e-439b098fe35b"
                 },
                 {
                     "speed_download": 88,
                     "speed_upload": 66,
                     "ping": 0.81,
-                    "time": 1510669699000,
+                    "time": 1510669699,
                     "test_uuid": "a975e00d-0bca-4871-8ce3-6e33c12311ef"
                 }
             ]},

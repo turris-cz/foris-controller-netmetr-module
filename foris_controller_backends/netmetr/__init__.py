@@ -92,7 +92,7 @@ class NetmetrDataFile(object):
                 "speed_download": float(record["speed_download"]),
                 "speed_upload": float(record["speed_upload"]),
                 "ping": float(record["ping"]),
-                "time": int(record["time"]),
+                "time": int(record["time"]) / 1000,  # -> to second precision
                 "test_uuid": record["test_uuid"],
             })
         return "ready", res
