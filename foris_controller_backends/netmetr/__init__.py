@@ -39,7 +39,7 @@ class NetmetrUci():
             autostart_enabled = parse_bool(
                 get_option_named(data, "netmetr", "settings", "autostart_enabled")
             )
-            sync_code = get_option_named(data, "netmetr", "settings", "sync_code")
+            sync_code = get_option_named(data, "netmetr", "settings", "sync_code", "")
             try:
                 hours_to_run = map(
                     int,
