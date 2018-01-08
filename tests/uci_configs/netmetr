@@ -1,0 +1,10 @@
+
+config settings 'settings'
+	option control_server 'control.netmetr.cz'
+	option uuid 'ffffffff-ffff-ffff-ffff-ffffffffffff'
+	option sync_code 'ffffffffffff'
+	list hours_to_run '0'
+	list hours_to_run '4'
+	list hours_to_run '12'
+	option autostart_enabled '1'
+

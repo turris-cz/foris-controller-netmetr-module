@@ -17,10 +17,12 @@
 # Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301  USA
 #
 
-from .fixtures import backend, infrastructure, ubusd_test
+from foris_controller_testtools.fixtures import (
+    backend, infrastructure, ubusd_test, uci_configs_init
+)
 
 
-def test_settings(infrastructure, ubusd_test):
+def test_settings(uci_configs_init, infrastructure, ubusd_test):
     notifications = infrastructure.get_notifications()
 
     res = infrastructure.process_message({
@@ -105,7 +107,7 @@ def test_settings(infrastructure, ubusd_test):
     }
 
 
-def test_get_data(infrastructure, ubusd_test):
+def test_get_data(uci_configs_init, infrastructure, ubusd_test):
     res = infrastructure.process_message({
         "module": "netmetr",
         "action": "get_data",
@@ -114,7 +116,7 @@ def test_get_data(infrastructure, ubusd_test):
     assert set(res["data"].keys()) == {"status", "performed_tests"}
 
 
-def test_download_data(infrastructure, ubusd_test):
+def test_download_data(uci_configs_init, infrastructure, ubusd_test):
     res = infrastructure.process_message({
         "module": "netmetr",
         "action": "download_data",
@@ -123,7 +125,7 @@ def test_download_data(infrastructure, ubusd_test):
     assert set(res["data"].keys()) == {"async_id"}
 
 
-def test_measure_and_download_data(infrastructure, ubusd_test):
+def test_measure_and_download_data(uci_configs_init, infrastructure, ubusd_test):
     res = infrastructure.process_message({
         "module": "netmetr",
         "action": "measure_and_download_data",
