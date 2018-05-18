@@ -88,11 +88,12 @@ class NetmetrDataFile(object):
 
         res = []
         for record in data["history"]:
+            # only mandatory field is test_uuid, val < -1 is considered wrong
             res.append({
-                "speed_download": float(record["speed_download"]),
-                "speed_upload": float(record["speed_upload"]),
-                "ping": float(record["ping"]),
-                "time": int(record["time"]) / 1000,  # -> to second precision
+                "speed_download": float(record.get("speed_download", -1)),
+                "speed_upload": float(record.get("speed_upload", -1)),
+                "ping": float(record.get("ping", -1)),
+                "time": int(record.get("time", -1000)) / 1000,  # -> to second precision
                 "test_uuid": record["test_uuid"],
             })
         return "ready", res
