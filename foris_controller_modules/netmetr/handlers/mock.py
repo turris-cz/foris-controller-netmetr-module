@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 class MockNetmetrHandler(Handler, BaseMockHandler):
     autostart_enabled = True
-    hours_to_run = range(0, 24, 2)
+    hours_to_run = list(range(0, 24, 2))
     sync_code = "1af827965d0d"
 
     @logger_wrapper(logger)

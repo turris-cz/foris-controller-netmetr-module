@@ -41,10 +41,9 @@ class NetmetrUci():
             )
             sync_code = get_option_named(data, "netmetr", "settings", "sync_code", "")
             try:
-                hours_to_run = map(
-                    int,
-                    get_option_named(data, "netmetr", "settings", "hours_to_run")
-                )
+                hours_to_run = [
+                    int(e) for e in get_option_named(data, "netmetr", "settings", "hours_to_run")
+                ]
             except ValueError:
                 raise UciTypeException(
                     get_option_named(data, "netmetr", "settings", "hours_to_run"),
