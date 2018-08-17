@@ -23,6 +23,7 @@ import logging
 from foris_controller.app import app_info
 from foris_controller.utils import RWLock
 from foris_controller_backends.cmdline import AsyncCommand
+from foris_controller_backends.files import BaseFile
 from foris_controller_backends.uci import (
     UciBackend, UciTypeException, UciRecordNotFound, get_option_named,
     parse_bool, store_bool
@@ -68,15 +69,14 @@ class NetmetrUci():
         return True
 
 
-class NetmetrDataFile(object):
+class NetmetrDataFile(BaseFile):
     DATA_FILE_PATH = "/tmp/netmetr-history.json"
     data_file_lock = RWLock(app_info["lock_backend"])
 
     def read_records(self):
         with self.data_file_lock.readlock:
             try:
-                with open(NetmetrDataFile.DATA_FILE_PATH) as f:
-                    data = json.load(f)
+                data = json.loads(self._file_content(NetmetrDataFile.DATA_FILE_PATH))
             except IOError:
                 return "missing", []
             except ValueError:
@@ -92,7 +92,7 @@ class NetmetrDataFile(object):
                 "speed_download": float(record.get("speed_download", -1)),
                 "speed_upload": float(record.get("speed_upload", -1)),
                 "ping": float(record.get("ping", -1)),
-                "time": int(record.get("time", -1000)) / 1000,  # -> to second precision
+                "time": int(record.get("time", -1000)) // 1000,  # -> to second precision
                 "test_uuid": record["test_uuid"],
             })
         return "ready", res
