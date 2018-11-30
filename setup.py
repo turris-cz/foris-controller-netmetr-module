@@ -43,7 +43,10 @@ setup(
     package_data={
         'foris_controller_modules.netmetr': ['schema', 'schema/*.json'],
     },
-    scripts=[],
+    namespace_packages=[
+        'foris_controller_modules',
+        'foris_controller_backends',
+    ],
     description=DESCRIPTION,
     long_description=open('README.rst').read(),
     install_requires=[
