@@ -21,7 +21,8 @@ import pytest
 import textwrap
 
 from foris_controller_testtools.fixtures import (
-    backend, infrastructure, ubusd_test, uci_configs_init, FILE_ROOT_PATH
+    backend, infrastructure, ubusd_test, uci_configs_init, FILE_ROOT_PATH,
+    mosquitto_test, start_buses
 )
 
 from foris_controller_testtools.utils import FileFaker
@@ -212,7 +213,7 @@ def netmetr_data(request):
         yield f, content
 
 
-def test_settings(uci_configs_init, infrastructure, ubusd_test):
+def test_settings(uci_configs_init, infrastructure, start_buses):
     notifications = infrastructure.get_notifications()
 
     res = infrastructure.process_message({
@@ -297,7 +298,7 @@ def test_settings(uci_configs_init, infrastructure, ubusd_test):
     }
 
 
-def test_get_data(uci_configs_init, infrastructure, ubusd_test, netmetr_data):
+def test_get_data(uci_configs_init, infrastructure, start_buses, netmetr_data):
     res = infrastructure.process_message({
         "module": "netmetr",
         "action": "get_data",
@@ -306,7 +307,7 @@ def test_get_data(uci_configs_init, infrastructure, ubusd_test, netmetr_data):
     assert set(res["data"].keys()) == {"status", "performed_tests"}
 
 
-def test_download_data(uci_configs_init, infrastructure, ubusd_test):
+def test_download_data(uci_configs_init, infrastructure, start_buses):
     res = infrastructure.process_message({
         "module": "netmetr",
         "action": "download_data",
@@ -315,7 +316,7 @@ def test_download_data(uci_configs_init, infrastructure, ubusd_test):
     assert set(res["data"].keys()) == {"async_id"}
 
 
-def test_measure_and_download_data(uci_configs_init, infrastructure, ubusd_test):
+def test_measure_and_download_data(uci_configs_init, infrastructure, start_buses):
     res = infrastructure.process_message({
         "module": "netmetr",
         "action": "measure_and_download_data",
