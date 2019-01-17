@@ -5,10 +5,11 @@ This is a netmetr module for foris-controller
 Requirements
 ============
 
+* python3
 * foris-controller
 * netmetr command
 
 Installation
 ============
 
-	``python setup.py install``
+	``python3 setup.py install``
