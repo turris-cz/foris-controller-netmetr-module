@@ -194,7 +194,7 @@
             "additionalProperties": false
         },
         {
-            "description": "Trigger measure speed and download data request",
+            "description": "Trigger measure speed and download data reply",
             "properties": {
                 "module": {"enum": ["netmetr"]},
                 "kind": {"enum": ["reply"]},
