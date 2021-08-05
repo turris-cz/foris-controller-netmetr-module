@@ -8,7 +8,7 @@ stages:
   - test
 
 .base_image: &py3_common
-  image: registry.labs.nic.cz/turris/foris-ci/python3
+  image: registry.nic.cz/turris/foris-ci/python3
 
 flake8:
   <<: *py3_common
