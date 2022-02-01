@@ -2,7 +2,7 @@
 
 #
 # foris-controller-netmetr-module
-# Copyright (C) 2017-2021 CZ.NIC, z.s.p.o. (https://www.nic.cz/)
+# Copyright (C) 2017-2022 CZ.NIC, z.s.p.o. (https://www.nic.cz/)
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ setup(
     ],
     setup_requires=[
         'pytest-runner',
-        "flake8"
+        "flake8<4.0",  # setuptools integration with flake8 is deprecated in version >=4.0
     ],
     tests_require=[
         'pytest',
