@@ -1,6 +1,6 @@
 #
 # foris-controller-netmetr-module
-# Copyright (C) 2017 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
+# Copyright (C) 2017-2023 CZ.NIC, z.s.p.o. (http://www.nic.cz/)
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,11 +20,8 @@
 import pytest
 import textwrap
 
-from foris_controller_testtools.fixtures import (
-    backend, infrastructure, ubusd_test, uci_configs_init, FILE_ROOT_PATH,
-    mosquitto_test, start_buses
-)
 
+from foris_controller_testtools.fixtures import FILE_ROOT_PATH
 from foris_controller_testtools.utils import FileFaker
 
 
